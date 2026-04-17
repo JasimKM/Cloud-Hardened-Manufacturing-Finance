@@ -1,0 +1,257 @@
+:root {
+    --bg-titan: #020617;
+    --reactor-glow: rgba(59, 130, 246, 0.4);
+    --security-green: #10b981;
+    --vault-blue: #3b82f6;
+    --text-hud: #94a3b8;
+    --border-dim: rgba(255, 255, 255, 0.05);
+    --carbon-texture: radial-gradient(circle, #1e293b 1px, transparent 1px);
+}
+
+* {
+    cursor: none; /* For the custom ghost cursor */
+}
+
+body {
+    background-color: var(--bg-titan);
+    color: var(--text-hud);
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+    /* Brushed Metal / Carbon Fiber Background */
+    background-image: 
+        var(--carbon-texture),
+        linear-gradient(45deg, #0f172a 25%, #1e293b 25%, #1e293b 50%, #0f172a 50%, #0f172a 75%, #1e293b 75%, #1e293b 100%);
+    background-size: 20px 20px, 400px 400px;
+    background-attachment: fixed;
+}
+
+/* Custom Crosshair Cursor */
+#ghost-cursor {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--vault-blue);
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, border-radius 0.2s;
+}
+#ghost-cursor::before, #ghost-cursor::after {
+    content: '';
+    position: absolute;
+    background: var(--vault-blue);
+}
+#ghost-cursor::before { width: 100%; height: 1px; top: 50%; left: 0; }
+#ghost-cursor::after { width: 1px; height: 100%; top: 0; left: 50%; }
+
+.interactive-hover #ghost-cursor {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border-color: var(--security-green);
+}
+
+/* Titan Bento Grid Layout */
+.titan-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 280px;
+    grid-template-rows: 80px 1fr 60px;
+    gap: 16px;
+    height: 100vh;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+    .titan-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        height: auto;
+    }
+}
+
+/* Glass Panels with Chamfered Corners */
+.glass-panel {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-dim);
+    position: relative;
+    clip-path: polygon(
+        0% 15px, 15px 0%, 
+        calc(100% - 15px) 0%, 100% 15px, 
+        100% calc(100% - 15px), calc(100% - 15px) 100%, 
+        15px 100%, 0% calc(100% - 15px)
+    );
+}
+
+.panel-active {
+    backdrop-filter: blur(30px);
+    box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Telemetry Sidebar */
+.telemetry-feed {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--security-green);
+    overflow-y: hidden;
+    height: 100%;
+    padding: 15px;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+/* Reactor (Center Panel) */
+.reactor-core {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+/* Data-Crucible (Iris Portal) */
+.crucible-portal {
+    width: 200px;
+    height: 200px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border-dim);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.crucible-portal::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed var(--security-green);
+    border-radius: 50%;
+    animation: rotate 10s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.crucible-active .crucible-portal {
+    transform: scale(1.1);
+    box-shadow: 0 0 50px var(--reactor-glow);
+    border-color: var(--security-green);
+}
+
+/* Security Pulse Animation */
+.shield-border {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.shield-pulse {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--security-green);
+    filter: blur(4px);
+    box-shadow: 0 0 10px var(--security-green);
+    border-radius: 50%;
+    offset-path: polygon(
+        0% 15px, 15px 0%, 
+        calc(100% - 15px) 0%, 100% 15px, 
+        100% calc(100% - 15px), calc(100% - 15px) 100%, 
+        15px 100%, 0% calc(100% - 15px)
+    );
+    animation: travel 4s linear infinite;
+}
+
+@keyframes travel {
+    0% { offset-distance: 0%; }
+    100% { offset-distance: 100%; }
+}
+
+/* HUD Typography */
+h1, h2, h3 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+}
+
+.stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--text-hud);
+    opacity: 0.6;
+}
+
+.stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--security-green);
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+/* 2FA Lever Styles */
+.lever-container {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(0,0,0,0.3);
+    padding: 8px;
+    border-radius: 50px;
+    border: 1px solid var(--border-dim);
+    position: relative;
+    cursor: pointer;
+}
+
+.lever-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    outline: none;
+    position: relative;
+    z-index: 5;
+}
+
+.lever-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 60px;
+    height: 34px;
+    background: var(--vault-blue);
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--vault-blue);
+}
+
+.lever-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+    font-size: 12px;
+    pointer-events: none;
+    color: white;
+    letter-spacing: 2px;
+}
+
+/* Digital Rain Background Particles */
+#pixel-fog {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}

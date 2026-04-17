@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.venv
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+terraform.tfvars
+
+# App Specific
+*.enc
+decrypt_page_current_ui_*.png
+home_page_current_ui_*.png
+sqli_test_result_*.png
+xss_test_result_*.png
+*.webp
+*.log
+
+# Sensitive
+.ssh/
+id_rsa
+id_rsa.pub
+
+# Misc
+.DS_Store
+Thumbs.db

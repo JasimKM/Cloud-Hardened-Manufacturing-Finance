@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-5">
+    <h2 class="mb-2">Decryption Facility: Asset Recovery</h2>
+    <div class="stat-label">AUTHORIZATION STATUS: <span class="stat-value" id="auth-status">LOCKED</span></div>
+</div>
+
+<form action="/decrypt" method="POST" enctype="multipart/form-data" id="decryption-form">
+    <div class="glass-panel p-5 w-100" style="max-width: 600px; background: rgba(0,0,0,0.4);">
+        <div class="mb-5">
+            <label class="tech-label">SECURED VAULT (.ENC)</label>
+            <input type="file" name="file" class="form-control" required>
+        </div>
+
+        <div class="mb-5">
+            <label class="tech-label">SECURITY KEY (ORIGINAL PASSPHRASE)</label>
+            <input type="password" name="password" class="form-control" placeholder="Verification Required" required>
+        </div>
+
+        <div class="mt-5">
+            <div class="stat-label text-center mb-3">SLIDE TO AUTHORIZE DECONSTRUCTION</div>
+            <div class="lever-container interactive" id="lever-track">
+                <input type="range" min="0" max="100" value="0" class="lever-slider" id="auth-lever">
+                <div class="lever-label" id="lever-text">HOLD & SLIDE</div>
+            </div>
+        </div>
+        
+        <button type="submit" id="submit-btn" style="display: none;"></button>
+    </div>
+</form>
+
+<script>
+    const lever = document.getElementById('auth-lever');
+    const leverText = document.getElementById('lever-text');
+    const authStatus = document.getElementById('auth-status');
+    const form = document.getElementById('decryption-form');
+
+    lever.addEventListener('input', (e) => {
+        const value = e.target.value;
+        if (value > 95) {
+            lever.value = 100;
+            leverText.textContent = "AUTHORIZED";
+            authStatus.textContent = "VERIFIED";
+            authStatus.style.color = "var(--vault-blue)";
+            
+            // Trigger haptic effect
+            document.body.style.filter = "brightness(1.5) contrast(1.2)";
+            setTimeout(() => {
+                document.body.style.filter = "none";
+                form.submit();
+            }, 500);
+        }
+    });
+
+    lever.addEventListener('mouseup', () => {
+        if (lever.value < 95) {
+            lever.value = 0;
+        }
+    });
+</script>
+{% endblock %}
